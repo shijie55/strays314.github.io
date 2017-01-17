@@ -1,0 +1,100 @@
+<extend name="./Public/admin/index.html"/>
+<block name="css">
+
+</block>
+<block name="main">
+<div class="row">
+        <div class="col-xs-12">
+          <div class="box box-danger">
+            <div class="box-header with-border">                
+                <a class="btn btn-success btn-sm btn-sub-taxis" href="javascript:void(0);"><i class="fa fa-sort-alpha-desc"></i> 更新排序</a> <a class="btn btn-info btn-sm" href="{:U('/Goods/addcate')}"><i class="fa fa-plus"></i> 添加分类</a>
+             </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+             <div class="table-responsive">  
+             <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+                <thead>
+                   <tr>
+                      <th class="text-center" width="60">排序</th>
+                      <th>名称</th>
+                      <th class="text-center" width="100">图标</th>
+                      <th class="text-center" width="160">操作</th>
+                   </tr>
+                </thead>
+                <tbody>
+                   <volist name='list' id='rs'>
+                   <tr>
+                      <td class="text-center">
+                         <input class="text-center" size="4" value="{$rs.taxis}" data-id="{$rs.id}" type="text" name="fortaxis">
+                      </td>
+                      <td>
+                         <for start="0" end="$rs['level']">&nbsp;&nbsp;</for>
+                         <for start="0" end="$rs['level']">∟</for>{$rs['catename']}
+                      </td>
+                      <td class="text-center">
+                         <if condition="!empty($rs['icon'])"><img src="{$rs['icon']}" width="80" /></if>
+                      </td>                      
+                      <td class="text-center">
+                         
+                            <a class="btn btn-xs btn-info" href="{:U('/Goods/editcate',array('id'=>$rs['id']))}">
+                               <i class="fa fa-edit"></i> 编辑
+                            </a>
+                            <a class="btn btn-xs btn-danger btn-del" data-id="{$rs['id']}" href="javascript:void(0);">
+                               <i class="fa fa-trash"></i> 删除
+                            </a>
+                         
+                      </td>
+                   </tr>
+                   </volist>
+                </tbody>
+             </table>
+             </div>
+            </div>
+            <!-- /.box-body -->
+          </div>
+        </div>
+        <!-- /.col -->
+      </div>
+</block>
+<block name="js">
+<script language="javascript">
+$(function(){
+   $('.btn-sub-taxis').click(function(){
+      var chk_value =Array();
+	  var tax_value = Array();
+	  $("input[name='fortaxis']").each(function(){
+		 chk_value.push($(this).attr('data-id'));
+		 tax_value.push($(this).val());
+	  });
+	  $.ajax({
+			 url: "{:U('/Role/updatetaxis',array('tabel'=>'goods_cate'))}", 
+			 type: "POST",
+			 data:{'idarray':chk_value,'taxisArray':tax_value},
+			 //dataType: "json",
+			 error: function(){  
+				 $.fn.tips({type:"error",content:"更新排序失败!"}); 
+			 },  
+			 success: function(data,status){
+				 var d=$.parseJSON(data);
+				 $.fn.tips({'type':d.type,'content':d.content,'url':''});				 
+			 }
+      });
+   });
+   $('.btn-del').click(function(){
+      var id = $(this).attr('data-id');
+	  $.ajax({
+			 url: "{:U('/Goods/delete')}", 
+			 type: "POST",
+			 data:{'idarr':id,'table':'goods_cate'},
+			 //dataType: "json",
+			 error: function(){  
+				 $.fn.tips({type:"error",content:"删除分类失败!"}); 
+			 },  
+			 success: function(d){				 
+				 $.fn.tips({'type':d.type,'content':d.msg,'url':''});				 
+			 }
+      });
+   });	
+});
+</script>
+</block>

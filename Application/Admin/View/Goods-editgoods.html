@@ -1,0 +1,258 @@
+<extend name="./Public/admin/index.html"/>
+<block name="css">
+
+<link rel="stylesheet" href="__PUBLIC__/admin/plugins/select2/select2.min.css">
+</block>
+<block name="main">
+<div class="row">
+   <div class="col-xs-12">
+      <form name="import_form" method="post" onsubmit="return checkfm();" action="{:U('/Goods/upgoods',array('id'=>$rs['id']))}">
+      <div class="nav-tabs-custom">
+         <ul class="nav nav-tabs">
+            <li class="active"><a href="#default" data-toggle="tab">基本信息</a></li>
+            <li><a href="#piclis" class="piclisTab" data-toggle="tab">图集</a></li>            
+            <li><a href="#remark" class="remarkTab" data-toggle="tab">描述</a></li> 
+         </ul>         
+         <div class="tab-content form-horizontal">            
+            
+            <div class="active tab-pane" id="default">
+               
+               <div class="form-group">
+                  <label for="catename" class="col-sm-2 control-label">分类：</label>
+                  <div class="col-sm-2 col-xs-12">
+                     <select name="cateid" id="cateid" class="form-control">                                 
+                        <volist name='list' id='rscate'> 
+                        <option <if condition="$rs['cateid'] eq $rscate['id']">selected="selected"</if> value="{$rscate['id']}"><for start="0" end="$rscate['level']">∟</for>{$rscate['catename']}</option>
+                        </volist>
+                     </select>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label for="title" class="col-sm-2 control-label">商品名称：</label>
+                  <div class="col-sm-4 col-xs-12">
+                     <input type="text" class="form-control" name="title" id="title" value="{$rs['title']}">
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label for="pic" class="col-sm-2 col-xs-12 control-label">图片：</label>
+                  <div class="col-sm-3 col-xs-8">
+                     <p><input type="text" class="form-control" name="pic" id="pic" value="{$rs['pic']}" /></p>
+                     <p><button type="button" class="btn btn-danger upload_button" id="file_upload_01" data-input="pic" data-img="pic_pic">上传</button><i class="pull-right" id="loading" style="display:none;"><img src="__PUBLIC__/admin/dist/img/loading.gif" /></i></p>
+                     <p><small class="text-muted">建议尺寸：200/200(px)</small></p>                           
+                  </div>
+                  <div class="col-sm-1 col-xs-4">
+                     <img src="<if condition="empty($rs['pic'])">__PUBLIC__/admin/dist/img/nopic.jpg<else />{$rs['pic']}</if>" id="pic_pic" class="img-responsive" />
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label for="price" class="col-sm-2 control-label">预付：</label>
+                  <div class="col-sm-2 col-xs-12">
+                     <input type="text" class="form-control" name="price" id="price" value="{$rs['price']}">
+                  </div>
+               </div>
+               <div class="form-group">
+                  <div class="col-sm-4 col-sm-offset-2 col-xs-12">
+                     <div class="callout callout-light">
+                        <p><span class="text-red">*</span> 换购类商品预付值为换购所需积分</p>
+                     </div> 
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label for="score" class="col-sm-2 control-label">积分：</label>
+                  <div class="col-sm-1 col-xs-12">
+                     <input type="text" class="form-control" name="score" id="score" value="{$rs['score']}">
+                  </div>
+               </div>
+               <div class="form-group">
+                  <div class="col-sm-4 col-sm-offset-2 col-xs-12">
+                     <div class="callout callout-light">
+                        <p><span class="text-red">*</span> 爆款、秒杀类商品用户支付完成后所获积分</p>
+                     </div> 
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label for="rpri" class="col-sm-2 control-label">市价：</label>
+                  <div class="col-sm-2 col-xs-12">
+                     <input type="text" class="form-control" name="rpri" id="rpri" value="{$rs['rpri']}">
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label for="ypri" class="col-sm-2 control-label">现价：</label>
+                  <div class="col-sm-2 col-xs-12">
+                     <input type="text" class="form-control" name="ypri" id="ypri" value="{$rs['ypri']}">
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label for="tags" class="col-sm-2 control-label">提示：</label>
+                  <div class="col-sm-4 col-xs-12">
+                     <input type="text" class="form-control" name="tags" id="tags" value="{$rs['tags']}">
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label for="sellnum" class="col-sm-2 control-label">销量：</label>
+                  <div class="col-sm-1 col-xs-12">
+                     <input type="text" class="form-control" name="sellnum" id="sellnum" value="{$rs['sellnum']}">
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label for="stock" class="col-sm-2 control-label">库存：</label>
+                  <div class="col-sm-1 col-xs-12">
+                     <input type="text" class="form-control" name="stock" id="stock" value="{$rs['stock']}">
+                  </div>
+               </div>
+               <!--
+               <div class="form-group">
+                  <label for="ishot" class="col-sm-2 control-label">爆款：</label>
+                  <div class="col-sm-1 col-xs-12">
+                     <select name="ishot" id="ishot" class="form-control">
+                        <option value="0" <if condition="$rs['ishot'] eq 0">selected="selected"</if>>否</option>
+                        <option value="1" <if condition="$rs['ishot'] eq 1">selected="selected"</if>>是</option>
+                     </select>
+                  </div>
+               </div>
+               -->
+               <div class="form-group">
+                  <label for="ismin" class="col-sm-2 control-label">商品属性：</label>
+                  <div class="col-sm-1 col-xs-12">
+                     <select name="ordtype" id="ordtype" class="form-control">
+                        <option value="0" <if condition="$rs['ordtype'] eq 0">selected="selected"</if>>爆款</option>
+                        <option value="1" <if condition="$rs['ordtype'] eq 1">selected="selected"</if>>秒杀</option>
+                        <option value="2" <if condition="$rs['ordtype'] eq 2">selected="selected"</if>>换购</option>
+                     </select>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label for="acttime" class="col-sm-2 control-label">秒杀开始时间：</label>
+                  <div class="col-sm-4 col-xs-12">
+                     <input type="text" class="form-control datepicker" name="acttime" id="acttime" value="{$rs['acttime']}">
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label for="sta" class="col-sm-2 control-label">商品状态：</label>
+                  <div class="col-sm-1 col-xs-12">
+                     <select name="sta" id="sta" class="form-control">
+                        <option value="1" <if condition="$rs['sta'] eq 1">selected="selected"</if>>正常</option>
+                        <option value="0" <if condition="$rs['sta'] eq 0">selected="selected"</if>>下架</option>
+                     </select>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label for="taxis" class="col-sm-2 control-label">排序：</label>
+                  <div class="col-sm-1 col-xs-12">
+                     <input type="text" class="form-control" name="taxis" id="taxis" value="{$rs['taxis']}">
+                  </div>
+               </div>
+                             
+            </div>
+            
+            <div class="tab-pane" id="piclis">               
+               
+               <div class="form-group">
+                  <div class="col-sm-10 col-sm-offset-1 col-xs-12 hidden-xs">
+                     <div class="callout callout-light">
+                        <p>可同时上传20张以内照片，图集内容处理成相同尺寸，建议大小为：420*300。</p>
+                     </div>                     
+                     <p><input type="hidden" name="picarr" id="picarr" value="{$rs['picarr']}"></p>
+                     <button type="button" class="btn btn-danger fupDTbtn" data-input="picarrlist" data-hidden="picarr">上传</button>
+                  </div>
+                  <div class="col-xs-12 visible-xs text-red text-center">图集上传请通过电脑登录操作</div>
+               </div>
+               <div class='form-group'>
+                  <div class='col-sm-10 col-sm-offset-1 col-xs-12' id="picarrlist" style="padding-left:0;">
+                     <volist name='vopiccm' id='pic'>
+                        <div class='col-sm-2 col-xs-4'><p><img src='/{$pic[pic]}' class='img-responsive' /></p><p><input type='text' class='form-control text-center' name='picarrcm[]' value='{$pic[piccm]}' /></p><p class='text-center'><a href='javascript:void(0);' data-replace='{$pic[pic]}' onclick='delpicarr(this)'><i class='fa fa-trash text-red'></i></a></p></div>                        
+                     </volist>
+                  </div>   
+               </div>               
+            </div>             
+                         
+            <div class="tab-pane" id="remark">
+               <div class="form-group">
+                  <div class="col-xs-12">
+                     <textarea class="easyedit" style="width:100%; height:300px;" name="content">{$rs['content']}</textarea>
+                  </div>
+               </div>
+            </div>            
+            
+         </div>         
+      </div>
+      <div class="clearfix"><button type="submit" class="btn btn-info"> <i class="icon-ok bigger-110"></i>确认添加</button></div>
+      </form> 
+        
+   </div>
+   <!-- /.col -->
+</div>
+<style type="text/css">
+.img-responsive{ margin:0 auto; }
+</style>
+</block>
+<block name="js">
+<script src="__PUBLIC__/admin/plugins/select2/select2.full.min.js"></script>
+<link rel="stylesheet" href="__PUBLIC__/kindEditor/themes/default/default.css" />
+<script charset="utf-8" src="__PUBLIC__/kindEditor/kindeditor.js"></script>
+<script charset="utf-8" src="__PUBLIC__/kindEditor/lang/zh_CN.js"></script>
+<script language="javascript">
+function checkfm(){
+   var title = $('#title').val();
+   var stock = $('#stock').val();
+   //var content = $('.kindeditor').val();
+   //alert(content);
+   if(title == ""){
+	  $.fn.tips({type:'error',content:'标题不可为空'});
+	  $('#title').focus().parent().parent().addClass('has-error');
+	  return false;
+   }else if(stock == ''){
+      $.fn.tips({type:'error',content:'请输入库存不可为空'});
+	  $('#stock').focus().parent().parent().addClass('has-error');
+	  return false;
+   }else{
+      return true;
+   }
+}
+KindEditor.ready(function(K) {
+   var editor = K.editor({
+      uploadJson : '__PUBLIC__/kindEditor/php/upload_json.php',
+      fileManagerJson : '__PUBLIC__/kindEditor/php/file_manager_json.php',
+	  allowFileManager : true
+   });
+   K('.fupDTbtn').click(function() {
+					var DTArray = K("#"+K(this).attr("data-input"));
+					var DTList = K("#"+K(this).attr("data-hidden"));
+					var strTemp = DTList.val();
+					var DTshow = DTArray.html();
+					editor.loadPlugin('multiimage', function() {
+						editor.plugin.multiImageDialog({
+							clickFn : function(urlList) {
+								var div = DTArray;
+								div.html('');
+								K.each(urlList, function(i, data) {
+									DTshow += "<div class='col-sm-2 col-xs-4'><p><img src='"+data.url+"' class='img-responsive' /></p><p><input type='text' class='form-control' name='picarrcm[]' /></p><p class='text-center'><a href='javascript:void(0);' data-replace='"+data.url+"' onclick='delpicarr(this)'><i class='fa fa-trash text-red'></i></a></p></div>";
+									strTemp+="|"+data.url.replace("/public/kindEditor/php/../../../","");
+									//alert(DTshow);
+								});
+								//alert(DTList.html());
+								DTList.val(strTemp);
+								DTArray.html(DTshow);
+								editor.hideDialog();
+							}
+						});
+                    });
+   });
+   K.create('.easyedit', {
+                items : [ 'source', '|', 'undo', 'redo', '|', 'image' ,'|', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold','italic', 'underline', 'strikethrough', '|','link', 'unlink']
+   });
+});
+function delpicarr(e){
+   var obj = $(e);
+   var str = obj.attr('data-replace');
+   str = '|'+str.replace('/public/kindEditor/php/../../../','');
+   var dmstr = $('#picarr').val();
+   //alert(dmstr);
+   dmstr = dmstr.replace(str,'');
+   $('#picarr').val(dmstr);
+   obj.parent().parent().remove();
+   //dmstr = $('#picarr').val();
+   //alert(dmstr);
+}
+</script>
+</block>

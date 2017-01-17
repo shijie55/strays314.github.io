@@ -1,0 +1,15 @@
+<div class="col-lg-1s col-md-12 hidden-xs">
+    <div class="p-submenu">
+    	<div class="hidden">{$selfCate}</div>
+       <ul>
+		   <volist name="sideNav" id="vo">	
+		   	  <if condition="$selfCate eq $vo['catename']">	 	
+          		<li class="active"><a href="{$vo['links']}">{$vo['catename']}</a></li>
+          	  <else />
+          	    <li><a href="{$vo['links']}">{$vo['catename']}</a></li>
+          	  </if>		
+		   </volist>		
+          	<li class="visible-lg"><a href="javascript:void(0);">&nbsp;</a></li>
+       </ul>
+    </div>
+</div>

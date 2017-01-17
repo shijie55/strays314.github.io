@@ -1,0 +1,19 @@
+<div class="container">
+      <div class="hidden-xs clearfix p-nav-box p-nm">
+         <p class="m">{$selfCate}</p><p class="ng">当前所在位置：<a href="{:U('Index/index')}">首页</a>&gt;{$breadNav['breadnav']}</p>
+      </div>
+      <div class="clear p-nav-box visible-xs">
+         <small class="catename"><a href="{:U('Index/index')}">首页</a>&gt;{$breadNav['breadnav']}</small>
+         <span class="pull-right"><i class="ion hidden ion-cls-sub-menu"></i><i class="ion r ion-opn-sub-menu"></i></span>
+         <ul>
+            <volist name="sideNav" id="vo">
+              <if condition="$vo['catename'] eq $selfCate"> 
+                  <li class="active"><a href="{$vo['links']}">{$vo['catename']}</a></li>
+              <else />
+                  <li><a href="{$vo['links']}">{$vo['catename']}</a></li> 
+              </if> 
+            </volist>     
+         </ul>
+      </div>
+</div>
+ 

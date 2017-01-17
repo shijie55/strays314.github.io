@@ -1,0 +1,37 @@
+<extend name="./Public/home/index.html" />
+<block name="title"><title>{:C('SITE_TITLE')}</title></block>
+<block name="banner">
+<!--#banner-->
+<section class="clearfix"><img src="{$banner}" class="img-responsive"></section>
+</block>
+<block name="main">
+<!--#main-->
+<section class="clearfix bgea pad-v-md">
+   
+    <include file="Public/navbar" /> 
+
+   <div class="clearfix pad-sm visible-lg"></div>
+   <div class="container clearfix">
+      <div class="row">
+         
+         <include file="Public/sidenav" />
+
+         <div class="col-lg-11s  col-md-12">
+            <div class="pm-box">
+               <div class="p-t hidden-xs">{$selfCate}</div>
+               <div class="clearfix boxm">
+                  <div class="row lis">
+                     <volist name="conts" id="vo">
+                        <div class="col-xs-6 col-sm-4">
+                           <div class="clearfix"><a href="{$vo['links']}" class="hit"><div class="hidden hitCount">{$vo['id']}</div><img src="{$vo['defaultpic']}" class="img-responsive" /></a></div><div class="clearfix t hit"><a href="{$vo['links']}" class="hit"><div class="hidden hitCount">{$vo['id']}</div>{$vo['title']}</a></div>
+                        </div>  
+                     </volist>               
+                  </div>
+               </div>
+            </div>
+            <div class="page bg"><div>    </div></div>
+         </div>
+      </div>
+   </div>
+</section>
+</block>
